@@ -1,4 +1,4 @@
-__all__ = ["circle_perimeter", "circle_area"]
+__all__ = ["triangle_perimeter", "triangle_area"]
 d_a, d_b, d_c = 7, 2, 8
 
 def triangle_perimeter(a=d_a,b=d_b,c=d_c):

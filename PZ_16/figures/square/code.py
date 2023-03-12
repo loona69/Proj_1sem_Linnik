@@ -1,4 +1,4 @@
-__all__ = ["circle_perimeter", "circle_area"]
+__all__ = ["square_perimeter", "square_area"]
 default_a = 15
 def square_perimeter(radius = default_a):
     return radius*4
