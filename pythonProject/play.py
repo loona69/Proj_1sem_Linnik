@@ -1,13 +1,60 @@
-
+from tkinter import *
 import pygame
 from pygame.locals import *  # noqa
 import sys
 import random
 
+screen = pygame.display.set_mode((500, 700))
 
-class FlappyBird:
+#загрузка image для меню
+background = pygame.image.load("assets/background.png").convert()
+start_img = pygame.image.load("assets/button_start.png").convert_alpha()
+exit_img = pygame.image.load("assets/button_quit.png").convert_alpha()
+
+#загрузка иконки-лого
+icon = pygame.image.load("assets/icon.png").convert_alpha()
+
+#меняем в окне название на нашу игру и иконку игры тоже меняем
+pygame.display.set_icon(icon)
+pygame.display.set_caption("Bullfinch")
+
+
+pygame.mixer.init()
+music = pygame.mixer.music.load('music/bird.mp3')
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.1)
+
+class Button():
+    def __init__(self, x, y, image, scale):
+        width = image.get_width()
+        height = image.get_height()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.clicked = False
+    def draw(self):
+        action = False
+        pos = pygame.mouse.get_pos()
+
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                action = True
+
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+        return action
+
+start_button = Button(250, 490, start_img, 1)
+exit_button = Button(250, 600, exit_img, 1)
+
+
+class Bullfinch:
+
     def __init__(self):
-        self.screen = pygame.display.set_mode((400, 708))
+        self.screen = pygame.display.set_mode((500, 700))
         self.bird = pygame.Rect(65, 50, 50, 50)
         self.background = pygame.image.load("assets/background.png").convert()
         self.birdSprites = [pygame.image.load("assets/1.png").convert_alpha(),
@@ -72,10 +119,14 @@ class FlappyBird:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-                if (event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN) and not self.dead:
+                if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN) and not self.dead:
                     self.jump = 17
                     self.gravity = 5
                     self.jumpSpeed = 10
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        game_paused = True
+                        return game_paused
 
             self.screen.fill((255, 255, 255))
             self.screen.blit(self.background, (0, 0))
@@ -86,7 +137,7 @@ class FlappyBird:
             self.screen.blit(font.render(str(self.counter),
                                          -1,
                                          (255, 255, 255)),
-                             (200, 50))
+                             (20, 20))
             if self.dead:
                 self.sprite = 2
             elif self.jump:
@@ -98,5 +149,20 @@ class FlappyBird:
             self.birdUpdate()
             pygame.display.update()
 
-if __name__ == "__main__":
-    FlappyBird().run()
+run = True
+while run:
+    screen.blit(background, (0, 0))
+    if start_button.draw():
+        if __name__ == "__main__":
+            Bullfinch().run()
+    if exit_button.draw():
+        run = False
+
+    for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+    pygame.display.update()
+pygame.quit()
+
+
+
