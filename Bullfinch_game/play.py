@@ -7,7 +7,7 @@ import random
 screen = pygame.display.set_mode((500, 700))
 
 #загрузка image для меню
-background = pygame.image.load("assets/background.png").convert()
+background = pygame.image.load("assets/menu_back.png").convert()
 start_img = pygame.image.load("assets/button_start.png").convert_alpha()
 exit_img = pygame.image.load("assets/button_quit.png").convert_alpha()
 
@@ -163,6 +163,3 @@ while run:
                     run = False
     pygame.display.update()
 pygame.quit()
-
-
-
